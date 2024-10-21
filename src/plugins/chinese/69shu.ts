@@ -9,7 +9,7 @@ class Shu69 implements Plugin.PluginBase {
   name = '69书吧 xyz';
   icon = 'src/cn/69shu/icon.png';
   site = 'https://www.69shu.xyz';
-  version = '0.2.1';
+  version = '0.2.w';
 
   async popularNovels(
     pageNo: number,
@@ -171,7 +171,7 @@ class Shu69 implements Plugin.PluginBase {
       const novel = {
         name: novelName,
         cover: novelCover,
-        path: url,
+        path: url.replace(this.site, ''),
       };
 
       novels.push(novel);
