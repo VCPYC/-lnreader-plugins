@@ -9,7 +9,7 @@ class Shu69 implements Plugin.PluginBase {
   name = '69书吧 xyz';
   icon = 'src/cn/69shu/icon.png';
   site = 'https://www.69shu.xyz';
-  version = '0.2.w';
+  version = '0.2.3';
 
   async popularNovels(
     pageNo: number,
@@ -88,7 +88,7 @@ class Shu69 implements Plugin.PluginBase {
 
     const allUrl = loadedCheerio('dd.all > a').attr('href');
     if (allUrl) {
-      const chaptersUrl = this.site + allUrl;
+      const chaptersUrl = this.site + allUrl.replace(this.site, '');
       const chaptersBody = await fetchText(chaptersUrl);
 
       const chaptersLoadedCheerio = parseHTML(chaptersBody);
