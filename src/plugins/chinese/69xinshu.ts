@@ -2,26 +2,21 @@ import { load as parseHTML } from 'cheerio';
 import { fetchText } from '@libs/fetch';
 import { FilterTypes, Filters } from '@libs/filterInputs';
 import { Plugin } from '@typings/plugin';
-// import { encode } from 'urlencode';
+import { encode } from 'urlencode';
 import { NovelStatus } from '@libs/novelStatus';
 
 class XinShu69 implements Plugin.PluginBase {
   id = '69xinshu';
   name = '69书吧';
   icon = 'src/cn/69xinshu/icon.png';
-  site = 'https://www.69shu.pro';
-  version = '0.1.1';
+  site = 'https://69shuba.cx';
+  version = '0.1.2';
 
   async popularNovels(
     pageNo: number,
     { filters }: Plugin.PopularNovelsOptions<typeof this.filters>,
   ): Promise<Plugin.NovelItem[]> {
-    let url: string;
-    if (pageNo === 1) {
-      url = `${this.site}/novels/class/${filters.class.value}.htm`;
-    } else {
-      url = `${this.site}/ajax_novels/class/${filters.class.value}/${pageNo}.htm`;
-    }
+    let url: string = `${this.site}/ajax_novels/class/${filters.class.value}/${pageNo}.htm`;
 
     const body = await fetchText(url, {}, 'gbk');
     if (body === '') throw Error('无法获取小说列表，请检查网络');
@@ -30,10 +25,7 @@ class XinShu69 implements Plugin.PluginBase {
 
     const novels: Plugin.NovelItem[] = [];
 
-    const novelsList =
-      pageNo === 1
-        ? loadedCheerio('div.newbox > ul > li')
-        : loadedCheerio('li');
+    const novelsList = loadedCheerio('li');
     novelsList.each((i, e) => {
       const novelUrl = loadedCheerio(e)
         .find('li > div > h3 > a:nth-child(2)')
@@ -61,7 +53,7 @@ class XinShu69 implements Plugin.PluginBase {
   }
 
   async parseNovel(novelPath: string): Promise<Plugin.SourceNovel> {
-    const url = this.site + novelPath;
+    const url = this.site + novelPath.replace(this.site, '');
 
     const body = await fetchText(url, {}, 'gbk');
     if (body === '') throw Error('无法获取小说内容，请检查网络');
@@ -150,8 +142,8 @@ class XinShu69 implements Plugin.PluginBase {
 
     const searchUrl = `${this.site}/modules/article/search.php`;
     const formData = new FormData();
-    // formData.append('searchkey', encode(searchTerm, 'gbk'));
-    formData.append('searchtype', 'all');
+    formData.append('searchkey', encode(searchTerm, 'gbk'));
+    formData.append('submit', 'Search');
 
     const body = await fetchText(
       searchUrl,
