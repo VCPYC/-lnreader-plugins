@@ -6,10 +6,10 @@ import { NovelStatus } from '@libs/novelStatus';
 
 class Shu69 implements Plugin.PluginBase {
   id = '69shu';
-  name = '69书吧';
+  name = '69书吧 xyz';
   icon = 'src/cn/69shu/icon.png';
   site = 'https://www.69shu.xyz';
-  version = '0.2.0';
+  version = '0.2.1';
 
   async popularNovels(
     pageNo: number,
@@ -44,7 +44,7 @@ class Shu69 implements Plugin.PluginBase {
       const novel = {
         name: novelName,
         cover: novelCover,
-        path: url,
+        path: url.replace(this.site, ''),
       };
 
       novels.push(novel);
